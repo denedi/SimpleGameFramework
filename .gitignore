@@ -5,5 +5,8 @@
 *.war
 *.ear
 
-# Buckup files
+# Buckup files #
 *.swp
+
+# Build Directories #
+build/

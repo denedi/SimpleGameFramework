@@ -1,3 +1,4 @@
+package Game.Model;
 /*A Game*/
 public interface Game extends Runnable {
    public void run();
