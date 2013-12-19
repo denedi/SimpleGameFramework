@@ -1,35 +1,58 @@
-public class SimpleGame implements Game, Runnable {
-    private GWorld simpleWorld;
-    private GView mainView;
-    private GController mainController;
+/*A Simple Game skeleton*/
+public abstract class SimpleGame implements Game {
+    protected GWorld simpleWorld;
+    protected GView mainView;
+    protected GController mainController;
+
+    public final GState PAUSED;
+    public final GState STOPPED;
+    public final GState PLAYING;
+
+    private GameState current;
 
     public SimpleGame() {
+        STOPPED = new StoppedState();
+        PAUSED = new PausedState();
+        PLAYING = new PlayingState();
+        current = STOPPED;
         init();
     }
     
-    protected void init() {
+    private void init() {
         simpleWorld = createWorld();
-        mainView = new SView( simpleWorld );
+        mainView = createView();
         mainController = createController();
     }
 
-    protected GWorld createWorld() {
-        return new SimpleWBDirector().construct(new SimpleWBuilder);
-    }
+    protected abstract GView createView();
 
-    protected GView createView() {
-        return new SimpleGView(simpleWorld);
-    }
+    protected abstract GWorld createWorld();
 
-    protected GController createController() {
-        return new SimpleGController(simpleWorld, mainView);
+    protected abstract GController createController(); 
+    
+    public void run() {
+        play();
     }
     
-    public void launch() {
-        new Thread(this).start();
+    public void play() {
+        while( true ){
+            current.play(this);
+        }
     }
 
-    public void run() {
-        simpleWorld.update();
+    public void pause() {
+        current.pause(this);
+    }
+
+    public void exit() {
+        
+    }
+
+    public void setState( GState state ) {
+        this.current = state;
+    }
+
+    public GState getState() {
+        return this.current;
     }
 }
